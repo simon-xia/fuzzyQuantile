@@ -2,6 +2,7 @@ package fuzzyQuantile
 
 import (
 	"math"
+	"math/rand"
 	"testing"
 	"time"
 )
@@ -27,7 +28,7 @@ func TestFuzzyQuantileBiased(t *testing.T) {
 		if er != nil {
 			t.Fatal(er)
 		}
-		checkResult(t, i, v, p, DefaultBiasedEpsilon, testDataStreamSize)
+		checkResult(t, i, v, p, defaultBiasedEpsilon, testDataStreamSize)
 	}
 }
 
@@ -66,4 +67,22 @@ func checkResult(t *testing.T, i int, v, quantile, err float64, cnt uint64) {
 	if ae > err {
 		t.Fatalf("test case %d failed: expect error %f, actual error %f", i+1, err, ae)
 	}
+}
+
+func mockDataStream(cnt int) (arr []float64) {
+	arr = make([]float64, cnt)
+	for i := range arr {
+		arr[i] = float64(i)
+	}
+	shuffle(arr, cnt)
+	return
+}
+
+func shuffle(arr []float64, n int) {
+	for i := 0; i < n; i++ {
+		j := rand.Intn(len(arr))
+		k := rand.Intn(len(arr))
+		arr[j], arr[k] = arr[k], arr[j]
+	}
+	return
 }

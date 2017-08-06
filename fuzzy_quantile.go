@@ -1,3 +1,9 @@
+/*
+Package fuzzyQuantile is a high performance quantile estimation(e.g. 90th, 95th, 99th) of streaming data, with user defined reasonable error (e.g 0.1%).
+
+This is an implementation of the algorithm presented in Cormode, Korn, Muthukrishnan, and Srivastava. "Effective Computation of Biased Quantiles over Data Streams" in ICDE 2005. (https://www.cs.rutgers.edu/~muthu/bquant.pdf)
+
+*/
 package fuzzyQuantile
 
 import (
@@ -18,15 +24,16 @@ var (
 	// By default it is set to discard all log messages via ioutil.Discard, but you can set it to redirect wherever you want.
 	Logger = log.New(ioutil.Discard, "[FuzzyQuantile] ", log.LstdFlags)
 
+	// DefaultFuzzyQuantileConf
+	// defaultBiasedEpsilon is 0.001 (0.1%)
 	DefaultFuzzyQuantileConf = &FuzzyQuantileConf{
-		BiasedEpsilon: DefaultBiasedEpsilon,
-		StoreType:     StoreTypeLinkedList,
+		BiasedEpsilon: defaultBiasedEpsilon,
 	}
 )
 
 const (
-	DefaultBiasedEpsilon = 0.01
-	MaxInsertBatch       = 500
+	defaultBiasedEpsilon = 0.001
+	maxInsertBatch       = 500
 )
 
 type StoreType int
@@ -51,16 +58,16 @@ type Quantile struct {
 	coff2    float64 // Section 4, Definition 5 case ii
 }
 
-func NewQuantile(q, e float64) Quantile {
+func NewQuantile(quantile, err float64) Quantile {
 	return Quantile{
-		q,
-		e,
-		2 * e / q,
-		2 * e / (1.0 - q),
+		quantile,
+		err,
+		2 * err / quantile,
+		2 * err / (1.0 - quantile),
 	}
 }
 
-type FuzzyQuantileStore interface {
+type fuzzyQuantileStore interface {
 	insert(float64)
 	query(float64) (float64, error)
 	compress()
@@ -74,15 +81,17 @@ type FuzzyQuantileStore interface {
 type FuzzyQuantileConf struct {
 	BiasedEpsilon float64
 	Quantiles     []Quantile
-	StoreType     StoreType
+	// default StoreType is StoreTypeLinkedList
+	StoreType StoreType
 }
 
 type FuzzyQuantile struct {
 	biasedEpsilon float64
 	quantiles     []Quantile
-	store         FuzzyQuantileStore
+	store         fuzzyQuantileStore
 }
 
+// initialize a FuzzyQuantile instance, if conf is nil, use DefaultFuzzyQuantileConf
 func NewFuzzyQuantile(conf *FuzzyQuantileConf) (fq *FuzzyQuantile) {
 
 	if conf == nil {
@@ -166,8 +175,8 @@ func (fq *FuzzyQuantile) targetedQuantilesInvariant(r, n uint64) float64 {
 func (fq *FuzzyQuantile) bufferSize() (size int) {
 
 	defer func() {
-		if size > MaxInsertBatch {
-			size = MaxInsertBatch
+		if size > maxInsertBatch {
+			size = maxInsertBatch
 		}
 	}()
 
