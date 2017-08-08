@@ -1,6 +1,7 @@
 package fuzzyQuantile
 
 import (
+	"log"
 	"math"
 	"math/rand"
 	"testing"
@@ -85,4 +86,51 @@ func shuffle(arr []float64, n int) {
 		arr[j], arr[k] = arr[k], arr[j]
 	}
 	return
+}
+
+// This example shows biased quantile estimation
+// Given a expected error which is defaultBiasedEpsilon (0.1%) as default, structure FuzzyQuantile will keep you quantile query with that error
+func ExampleFuzzyQuantileWithBiasedQuantile() {
+
+	fq := NewFuzzyQuantile(nil)
+
+	// valueChan repsent a data stream source
+	valueChan := make(chan float64)
+	for v := range valueChan {
+		fq.Insert(v)
+	}
+	// valueChan close at other place
+
+	v, er := fq.Query(0.8)
+	if er != nil {
+		// handle error
+	}
+	log.Printf("success get 80th percentile value %v", v)
+}
+
+// This example show target quantile estimation
+// Given a set of Quantiles, each Quantile instance repsent a pair (quantile, error) which means expected quantile value with the error
+// And query will give the result quantile value corresponding error
+func ExampleFuzzyQuantileWithTargetQuantile() {
+
+	testQuantiles := []Quantile{
+		NewQuantile(0.5, 0.01),
+		NewQuantile(0.8, 0.001),
+		NewQuantile(0.95, 0.0001),
+	}
+
+	fq := NewFuzzyQuantile(&FuzzyQuantileConf{Quantiles: testQuantiles})
+
+	// valueChan repsent a data stream source
+	valueChan := make(chan float64)
+	for v := range valueChan {
+		fq.Insert(v)
+	}
+	// valueChan close at other place
+
+	v, er := fq.Query(0.8)
+	if er != nil {
+		// handle error
+	}
+	log.Printf("success get 80th percentile value %v", v)
 }
