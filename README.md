@@ -1,12 +1,18 @@
 # FuzzyQuantile
 
-[![GoDoc](https://godoc.org/github.com/simon-xia/FuzzyQuantile?status.png)](https://godoc.org/github.com/simon-xia/FuzzyQuantile)
-[![Go Report Card](https://goreportcard.com/badge/github.com/simon-xia/FuzzyQuantile)](https://goreportcard.com/report/github.com/simon-xia/FuzzyQuantile)
+[![GoDoc](https://godoc.org/github.com/simon-xia/fuzzyQuantile?status.png)](https://godoc.org/github.com/simon-xia/fuzzyQuantile)
+[![Go Report Card](https://goreportcard.com/badge/github.com/simon-xia/fuzzyQuantile)](https://goreportcard.com/report/github.com/simon-xia/fuzzyQuantile)
 
 High performance quantile estimation(e.g. 90th, 95th, 99th) over streaming data, with user defined reasonable error (e.g 0.1%). 
 
 This is an implementation of the algorithm presented in [Cormode, Korn, Muthukrishnan, and Srivastava. "Effective Computation of Biased Quantiles over Data Streams"](https://www.cs.rutgers.edu/~muthu/bquant.pdf) in ICDE 2005.
 
+
+# Install
+
+```
+go get github.com/simon-xia/fuzzyQuantile
+```
 
 
 # Usage

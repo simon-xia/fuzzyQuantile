@@ -57,7 +57,7 @@ func (l *linkedListStore) flush() {
 }
 
 func (l *linkedListStore) insertBatch(v []float64) {
-	//defer trace()()
+	defer trace()()
 
 	sort.Slice(v, func(i, j int) bool { return v[i] < v[j] })
 
@@ -87,7 +87,7 @@ func (l *linkedListStore) getDelta(r, n uint64) uint64 {
 }
 
 func (l *linkedListStore) compress() {
-	//defer trace()()
+	defer trace()()
 
 	if l.l.Len() < 2 {
 		return
