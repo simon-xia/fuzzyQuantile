@@ -90,7 +90,7 @@ func shuffle(arr []float64, n int) {
 
 // This example shows biased quantile estimation
 // Given a expected error which is defaultBiasedEpsilon (0.1%) as default, structure FuzzyQuantile will keep you quantile query with that error
-func ExampleFuzzyQuantileWithBiasedQuantile() {
+func ExampleFuzzyQuantile_biasedQuantile() {
 
 	fq := NewFuzzyQuantile(nil)
 
@@ -110,8 +110,8 @@ func ExampleFuzzyQuantileWithBiasedQuantile() {
 
 // This example show target quantile estimation
 // Given a set of Quantiles, each Quantile instance repsent a pair (quantile, error) which means expected quantile value with the error
-// And query will give the result quantile value corresponding error
-func ExampleFuzzyQuantileWithTargetQuantile() {
+// And query will give the quantile value with corresponding error
+func ExampleFuzzyQuantile_targetQuantile() {
 
 	testQuantiles := []Quantile{
 		NewQuantile(0.5, 0.01),

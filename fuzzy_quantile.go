@@ -85,13 +85,14 @@ type FuzzyQuantileConf struct {
 	StoreType StoreType
 }
 
+// FuzzyQuantile is a instance to store infinite data streaming and accept percentile query
 type FuzzyQuantile struct {
 	biasedEpsilon float64
 	quantiles     []Quantile
 	store         fuzzyQuantileStore
 }
 
-// initialize a FuzzyQuantile instance, if conf is nil, use DefaultFuzzyQuantileConf
+// NewFuzzyQuantile initialize a FuzzyQuantile instance, if conf is nil, use DefaultFuzzyQuantileConf
 func NewFuzzyQuantile(conf *FuzzyQuantileConf) (fq *FuzzyQuantile) {
 
 	if conf == nil {
@@ -113,20 +114,22 @@ func NewFuzzyQuantile(conf *FuzzyQuantileConf) (fq *FuzzyQuantile) {
 	return
 }
 
-// reset storage
+// Reset clean and initialize storage
 func (fq *FuzzyQuantile) Reset() {
 	fq.store.reset()
 }
 
-// print internal stat info of storage
+// Describe print internal stat info of storage
 func (fq *FuzzyQuantile) Describe() string {
 	return fmt.Sprintf("\nstorage stat:\n%s", fq.store.describe())
 }
 
+// Insert a value into storage
 func (fq *FuzzyQuantile) Insert(v float64) {
 	fq.store.insert(v)
 }
 
+// Query a specific percentile of data inserted
 func (fq *FuzzyQuantile) Query(percentile float64) (res float64, err error) {
 
 	if percentile < 0 || percentile > 1 {

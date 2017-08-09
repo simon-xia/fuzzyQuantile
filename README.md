@@ -1,12 +1,15 @@
-#FuzzyQuantile
+# FuzzyQuantile
 
-High performance quantile estimation(e.g. 90th, 95th, 99th) of streaming data, with user defined reasonable error (e.g 0.1%). 
+[![GoDoc](https://godoc.org/github.com/simon-xia/FuzzyQuantile?status.png)](https://godoc.org/github.com/simon-xia/FuzzyQuantile)
+[![Go Report Card](https://goreportcard.com/badge/github.com/simon-xia/FuzzyQuantile)](https://goreportcard.com/report/github.com/simon-xia/FuzzyQuantile)
+
+High performance quantile estimation(e.g. 90th, 95th, 99th) over streaming data, with user defined reasonable error (e.g 0.1%). 
 
 This is an implementation of the algorithm presented in [Cormode, Korn, Muthukrishnan, and Srivastava. "Effective Computation of Biased Quantiles over Data Streams"](https://www.cs.rutgers.edu/~muthu/bquant.pdf) in ICDE 2005.
 
 
 
-#Usage
+# Usage
 
 
 This example show target quantile estimation. Given a set of Quantiles, each Quantile instance repsent a pair (quantile, error) which means expected quantile value with the error. And query will give the result quantile value corresponding error.
@@ -36,3 +39,8 @@ This example show target quantile estimation. Given a set of Quantiles, each Qua
 ```
 
 For other usage, check the document or testcase in source code
+
+# TODO
+
+- [ ] RBTree Storage Impl
+- [ ] More graceful log
